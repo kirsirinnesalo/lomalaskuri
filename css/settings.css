@@ -1,0 +1,218 @@
+label {
+    display: block;
+    margin-top: 0;
+}
+
+input[type="time"],
+input[type="date"] {
+    margin-left: 0.5em;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    right: 0.75em;
+    top: 0.75em;
+    background: none;
+}
+.modal.active {
+    display: block;
+}
+.modal-content {
+    background: #fff;
+    padding: 2em;
+    border-radius: 8px;
+    min-width: 320px;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.2);
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+.modal-content>div {
+    margin-bottom: 1.5em;
+}
+.settings-section {
+    border: 1.5px solid #d0d0d0;
+    border-radius: 8px;
+    padding: 1em;
+    margin-bottom: 1.2em;
+    position: relative;
+    background: #fafbfc;
+}
+.settings-section>strong {
+    position: absolute;
+    top: -0.5em;
+    left: 1.2em;
+    background: #fafbfc;
+    padding: 0 0.5em;
+    font-size: 1em;
+    font-weight: bold;
+    color: #444;
+    border-radius: 0.5em;
+    letter-spacing: 0.01em;
+    z-index: 1;
+}
+#settingsToggle {
+    position: fixed;
+    top: 0.6em;
+    right: 0.6em;
+    background: none;
+    border: none;
+    width: 1.5em;
+    height: 1.5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2em;
+    color: #444;
+    cursor: pointer;
+    z-index: 1100;
+    border-radius: 50%;
+    transition: background 0.2s;
+    padding: 0;
+}
+#settingsToggle.active,
+#settingsToggle:hover {
+    background: #eee;
+}
+#saveSettings,
+#addVacation {
+    margin-top: 2em;
+    padding: 0.4em 1.2em;
+    border-radius: 5px;
+    border: 1px solid #bbb;
+    background: #f5f5f5;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-right: 0.5em;
+    margin-left: 1em;
+    font-size: 0.75em;
+}
+#saveSettings:hover,
+#addVacation:hover {
+    background: #e0e0e0;
+}
+.remove-vacation {
+    background: none;
+    border: none;
+    font-size: 0.9em;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 0.1em;
+    color: #b00;
+    margin-left: 0.1em;
+    vertical-align: middle;
+}
+.remove-vacation:hover {
+    color: #f00;
+    background: #ffeaea;
+}
+#undoRemoveVacation {
+    margin-left:1em; 
+    background:#fff; 
+    color:#b71c1c; 
+    border:none; 
+    border-radius:4px; 
+    padding:0.2em 0.8em; 
+    cursor:pointer;
+}
+.modal-notices {
+    position: absolute;
+    top: 0.5em;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
+    z-index: 10;
+}
+#saveNotice,
+#removeNotice {
+    display: none;
+    position: static;
+    margin: 0.2em 0;
+    left: unset;
+    top: unset;
+    transform: none;
+    pointer-events: auto;
+}
+#saveNotice {
+    background: #4caf50;
+    color: #fff;
+    padding: 0.8em 2em;
+    border-radius: 6px;
+    font-size: 0.9em;
+    z-index: 2000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    opacity: 0.95;
+}
+#removeNotice {
+    background: #b71c1c;
+    color: #fff;
+    padding: 0.8em 2em;
+    border-radius: 6px;
+    font-size: 0.9em;
+    z-index: 2000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    opacity: 0.95;
+}
+.button-row {
+    display: flex;
+    gap: 0.5em;
+    margin-top: 2em;
+}
+.holidays-list,
+.vacations-list {
+    margin-top: 1em;
+    margin-bottom: 1em;
+    padding-left: 0;
+    list-style: none;
+}
+.holidays-list li,
+.vacations-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    margin-bottom: 0.3em;
+}
+.holiday-form,
+.vacation-form {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5em;
+    margin-top: 0.5em;
+}
+.date-fi {
+    display: inline-block;
+    min-width: 13.5em;
+    text-align: right;
+    letter-spacing: 0.05em;
+}
+.vacations-list .vacation-date {
+    display: flex;
+    align-items: center;
+    min-width: 18em;
+    justify-content: flex-end;
+    font-variant-numeric: tabular-nums;
+}
+.vacations-list .vacation-date .start,
+.vacations-list .vacation-date .end {
+    display: inline-block;
+    min-width: 5.0em;
+    text-align: right;
+}
+.vacations-list .vacation-date .dash {
+    display: inline-block;
+    width: 1.5em;
+    text-align: center;
+}
+#weekdayCheckboxes label {
+    display: inline-block;
+    gap: 0.5em;
+    margin-top: 0.5em;
+}
+
+
