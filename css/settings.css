@@ -12,7 +12,7 @@ input[type="date"] {
     display: none;
     position: fixed;
     z-index: 1000;
-    right: 0.75em;
+    left: 0.75em;
     top: 0.75em;
     background: none;
 }
@@ -23,7 +23,6 @@ input[type="date"] {
     background: #fff;
     padding: 2em;
     border-radius: 8px;
-    min-width: 320px;
     box-shadow: 0 2px 16px rgba(0, 0, 0, 0.2);
     position: relative;
     max-height: 90vh;
@@ -56,7 +55,7 @@ input[type="date"] {
 #settingsToggle {
     position: fixed;
     top: 0.6em;
-    right: 0.6em;
+    left: 0.6em;
     background: none;
     border: none;
     width: 1.5em;
@@ -185,29 +184,58 @@ input[type="date"] {
     gap: 0.5em;
     margin-top: 0.5em;
 }
-.date-fi {
-    display: inline-block;
-    min-width: 13.5em;
+.holidays-list .holiday-date {
+    display: grid;
+    grid-template-columns: minmax(7em, max-content) 1fr;
+    align-items: center;
+    min-width: 0;
+    gap: 0.2em;
+}
+.holidays-list .holiday-date .date-fi {
+    justify-self: end;
     text-align: right;
-    letter-spacing: 0.05em;
+    min-width: 7em;
+}
+.holidays-list .holiday-date .name {
+    justify-self: start;
+    text-align: left;
+    padding-left: 0.5em;
+    min-width: 6em;
+    white-space: nowrap;
 }
 .vacations-list .vacation-date {
-    display: flex;
+    display: grid;
+    grid-template-columns: minmax(5em, max-content) 1.1em minmax(5em, max-content) 1fr;
     align-items: center;
-    min-width: 18em;
-    justify-content: flex-end;
+    min-width: 0;
+    gap: 0.2em;
     font-variant-numeric: tabular-nums;
 }
-.vacations-list .vacation-date .start,
-.vacations-list .vacation-date .end {
-    display: inline-block;
-    min-width: 5.0em;
+
+.vacations-list .vacation-date .start {
+    justify-self: end;
     text-align: right;
+    min-width: 5em;
 }
+
 .vacations-list .vacation-date .dash {
-    display: inline-block;
-    width: 1.5em;
+    justify-self: center;
     text-align: center;
+    width: 1.1em;
+}
+
+.vacations-list .vacation-date .end {
+    justify-self: start;
+    text-align: left;
+    min-width: 5em;
+}
+
+.vacations-list .vacation-date .name, .holidays-list .holiday-date .name {
+    justify-self: start;
+    text-align: left;
+    padding-left: 0.5em;
+    min-width: 6em;
+    white-space: nowrap;
 }
 #weekdayCheckboxes label {
     display: inline-block;
@@ -215,4 +243,61 @@ input[type="date"] {
     margin-top: 0.5em;
 }
 
+@media (max-width: 600px) {
+    .modal-content {
+        min-width: 0;
+        max-width: 98vw;
+        width: 100%;
+        padding: 1em 0.7em;
+        font-size: 1em;
+        box-sizing: border-box;
+    }
+    .settings-section {
+        padding: 0.7em 0.5em;
+        font-size: 1em;
+    }
+    #settingsToggle {
+        top: 0.2em;
+        left: 0.2em;
+        font-size: 1em;
+    }
+    .vacations-list .vacation-date {
+        font-size: 0.98em;
+    }
+    .date-fi {
+        min-width: 0;
+        text-align: left;
+    }
+    .vacation-list .vacation-date {
+        min-width: 0;
+        width: 100%;
+        justify-content: flex-start;
+        font-size: 0.98em;
+        text-align: left;
+    }
+    .vacation-form {
+        flex-wrap: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5em;
+    }
+    .vacation-form input,
+    .vacation-form button {
+        flex-basis: 100%;
+        box-sizing: border-box;
+        margin: 0;
+        margin-top: 0.3em;
+    }
+    .vacation-form .dash {
+        display: none;
+    }
+}
 
+@media (max-width: 400px) {
+    .holiday-form,
+    .vacation-form {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.2em;
+    }
+}

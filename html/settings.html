@@ -34,7 +34,7 @@
                 </div>
                 <label>
                     <input type="time" id="workdayStart" value="08:00">
-                    &ndash;
+                    <span class="dash">–</span>
                     <input type="time" id="workdayEnd" value="16:00">
                     <button id="saveSettings" type="button">Tallenna</button>
                 </label>
@@ -44,9 +44,9 @@
                 <ul class="vacations-list" id="vacationsList"></ul>
                 <form id="vacationForm" class="vacation-form" autocomplete="off">
                     <input type="date" id="vacationStart" required placeholder="Alkupäivä">
-                    &ndash;
+                    <span class="dash">–</span>
                     <input type="date" id="vacationEnd" placeholder="Loppupäivä">
-                    <input type="text" id="vacationName" placeholder="nimi lomalle" style="width:10em;">
+                    <input type="text" id="vacationName" placeholder="nimi lomalle">
                     <button type="submit" id="addVacation">Lisää loma</button>
                 </form>
             </div>

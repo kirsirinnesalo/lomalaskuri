@@ -97,7 +97,12 @@ function renderHolidays() {
     } else {
         futureHolidays.forEach(h => {
             const li = document.createElement('li');
-            li.innerHTML = `<span class="date-fi">${formatDateFi(h.date)}</span> (${h.name})`;
+            li.innerHTML = `
+                <span class="holiday-date">
+                    <span class="date-fi">${formatDateFi(h.date)}</span>
+                    <span class="name">${h.name}</span>
+                </span>
+            `;
             ul.appendChild(li);
         });
     }
@@ -125,8 +130,8 @@ function renderVacations() {
                     <span class="start">${!isSingleDay ? startText : ''}</span>
                     <span class="dash">${!isSingleDay ? '–' : ''}</span>
                     <span class="end">${endText}</span>
+                    <span class="name">${name}</span>
                 </span>
-                (${name})
                 <button class="remove-vacation" data-index="${i}" title="Poista">&#10006;</button>
             `;
             ul.appendChild(li);
