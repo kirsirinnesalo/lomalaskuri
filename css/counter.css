@@ -3,6 +3,7 @@
 }
 
 .nextFreeTimer {
+    display: table;
     margin-top: 0.2em;
     font-size: 7.2em;
     display: inline-block;
@@ -46,3 +47,12 @@
     padding-top: 0.2em;
 }
 
+@media (max-width: 600px) {
+    .nextFreeTimer {
+        font-size: 3em;
+    }
+    .freeInfo {
+        margin-left: 0.5em;
+        font-size: 0.95em;
+    }
+}

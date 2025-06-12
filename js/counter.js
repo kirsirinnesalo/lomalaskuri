@@ -267,7 +267,6 @@ function renderNextFreeTimeCounter(isTodayWorkday, isNextFreeToday, diffDays, no
         const timeLeft = getTimeLeft(now, workEnd);
         if (timeLeft) {
             let { hours, minutes, seconds } = timeLeft;
-            if (diffDays === 1 && workEnd - now > 0) diffDays = 0;
             const timer = renderTimeRows(diffDays, hours, minutes, seconds);
             setHeadTitleFromTimer({ timer });
             return `
@@ -341,9 +340,9 @@ function getNextFreeInfo(nextFree) {
 }
 
 function getNextFreeDayText(diffDays) {
-    if (diffDays === 1) {
+    if (diffDays === 0) {
         return ', huomenna';
-    } else if (diffDays > 1) {
+    } else if (diffDays > 0) {
         return `, ${diffDays} päivän päästä`;
     }
     return '';
@@ -381,11 +380,11 @@ function renderNextFree(nextFree, today) {
 
     const { workStart, workEnd } = getWorkTimes(now, workdayStart, workdayEnd);
 
-    const dayText = getNextFreeDayText(diffDays);
-
     if (diffDays > 0 && isTodayWorkday && !isNextFreeToday && now >= workStart) {
         diffDays -= 1;
     }
+
+    const dayText = getNextFreeDayText(diffDays);
 
     const { label, name } = getNextFreeInfo(nextFree);
     const streakText = getNextFreeStreakInfo(nextFree, workWeekdays);
