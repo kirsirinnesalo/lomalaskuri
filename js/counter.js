@@ -25,6 +25,11 @@ function formatDateRange(start, end) {
     }
 }
 
+function capitalizeFirst(str) {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 function getWeekdayNameFi(day) {
     return ['sunnuntai', 'maanantai', 'tiistai', 'keskiviikko', 'torstai', 'perjantai', 'lauantai'][day];
 }
@@ -257,45 +262,60 @@ function renderTimerHtml(timer) {
     ).join('\n');
 }
 
-function renderNextFreeTimeCounter(isTodayWorkday, isNextFreeToday, diffDays, now, workEnd) {
-    const endedMsg = `
-        <div class="nextFreeTimer">
-            <span class="timerLabel">Työpäivä on jo päättynyt – vapaa on alkanut!</span>
-        </div>
-    `;
-    if (isTodayWorkday && !isNextFreeToday) {
-        const timeLeft = getTimeLeft(now, workEnd);
-        if (timeLeft) {
-            let { hours, minutes, seconds } = timeLeft;
-            const timer = renderTimeRows(diffDays, hours, minutes, seconds);
-            setHeadTitleFromTimer({ timer });
-            return `
-                <div class="nextFreeTimer">
-                    ${renderTimerHtml(timer)}
-                </div>
-            `;
-        } else {
-            setHeadTitleFromTimer({ ended: true });
-            return endedMsg;
-        }
-    } else if (isTodayWorkday && isNextFreeToday) {
-        setHeadTitleFromTimer({ ended: true });
-        return endedMsg;
-    } else if (diffDays > 0) {
-        const timer = [{
-            value: diffDays,
-            label: diffDays === 1 ? 'päivä' : 'päivää'
-        }];
-        setHeadTitleFromTimer({ timer });
+function renderNextFreeTimeCounter(
+    isTodayWorkday,
+    diffDays,
+    now,
+    workEnd,
+    nextFreeName
+) {
+    const isFreeDayMode = !(isTodayWorkday || diffDays > 0);
+
+    function timerDiv(html) {
         return `
             <div class="nextFreeTimer">
-                ${renderTimerHtml(timer)}
+                ${html}
             </div>
         `;
-    } else {
-        setHeadTitleFromTimer({ isFreeDayMode: true });
-        return '';
     }
+
+    function timerDivWithLabel(label) {
+        return timerDiv(`<span class="timerLabel">${label}</span>`);
+    }
+
+    if (isTodayWorkday && now >= workEnd) {
+        setHeadTitleFromTimer({ ended: true, timer: [] });
+        return timerDivWithLabel('Työpäivä on jo päättynyt!');
+    }
+
+    if (isFreeDayMode && nextFreeName) {
+        setHeadTitleFromTimer({ ended: true, isFreeDayMode, timer: [] });
+        return timerDivWithLabel(`${capitalizeFirst(nextFreeName)} on alkanut!`);
+    }
+
+    if (isFreeDayMode) {
+        setHeadTitleFromTimer({ ended: true, isFreeDayMode, timer: [] });
+        return timerDivWithLabel('Vapaapäivä on alkanut!');
+    }
+
+    if (isTodayWorkday && now < workEnd) {
+        const timeLeft = getTimeLeft(now, workEnd);
+        if (timeLeft) {
+            const { hours, minutes, seconds } = timeLeft;
+            const timer = renderTimeRows(diffDays, hours, minutes, seconds);
+            setHeadTitleFromTimer({ timer });
+            return timerDiv(renderTimerHtml(timer));
+        }
+    }
+
+    if (diffDays > 0) {
+        const timer = [{ value: diffDays, label: diffDays === 1 ? 'päivä' : 'päivää' }];
+        setHeadTitleFromTimer({ timer });
+        return timerDiv(renderTimerHtml(timer));
+    }
+
+    setHeadTitleFromTimer({ timer: [] });
+    return '';
 }
 
 function getAfterDate(today, currentVacation, isWorkday, workWeekdays) {
@@ -343,7 +363,7 @@ function getNextFreeDayText(diffDays) {
     if (diffDays === 0) {
         return ', huomenna';
     } else if (diffDays > 0) {
-        return `, ${diffDays} päivän päästä`;
+        return `, vielä ${diffDays} ${diffDays === 1 ? ' työpäivä' : ' työpäivää'}`;
     }
     return '';
 }
@@ -363,11 +383,11 @@ function renderNextFree(nextFree, today) {
         return `<div class="nextFree">Ei vapaita tiedossa.</div>`;
     }
     const msPerDay = 1000 * 60 * 60 * 24;
-    const now = new Date();
     const todayStart = new Date(today);
     todayStart.setHours(0, 0, 0, 0);
     const nextFreeStart = new Date(nextFree.date);
     nextFreeStart.setHours(0, 0, 0, 0);
+    
     let diffDays = Math.ceil((nextFreeStart - todayStart) / msPerDay);
 
     const settings = typeof getSettings === 'function' ? getSettings() : { weekdays: [1,2,3,4,5], workdayStart: '08:00', workdayEnd: '16:00' };
@@ -375,12 +395,12 @@ function renderNextFree(nextFree, today) {
     const workdayStart = settings.workdayStart || '08:00';
     const workdayEnd = settings.workdayEnd || '16:00';
 
-    const isTodayWorkday = workWeekdays.includes(now.getDay());
-    const isNextFreeToday = formatDateLocal(now) === formatDateLocal(nextFreeStart);
+    const isTodayWorkday = workWeekdays.includes(today.getDay());
+    const isNextFreeToday = formatDateLocal(today) === formatDateLocal(nextFreeStart);
 
-    const { workStart, workEnd } = getWorkTimes(now, workdayStart, workdayEnd);
+    const { workStart, workEnd } = getWorkTimes(today, workdayStart, workdayEnd);
 
-    if (diffDays > 0 && isTodayWorkday && !isNextFreeToday && now >= workStart) {
+    if (diffDays > 0 && isTodayWorkday && !isNextFreeToday && today >= workStart) {
         diffDays -= 1;
     }
 
@@ -394,13 +414,13 @@ function renderNextFree(nextFree, today) {
     return `
         <div class="nextFree">${label} ${nextFree.date.toLocaleDateString('fi')} – ${name}${dayText}</div>
         ${streakText}
-        ${showTimer ? renderNextFreeTimeCounter(isTodayWorkday, isNextFreeToday, diffDays, now, workEnd) : ''}
+        ${showTimer ? renderNextFreeTimeCounter(isTodayWorkday, diffDays, today, workEnd, name || label) : ''}
     `;
 }
 
 function setHeadTitleFromTimer({ isVacationMode, isHolidayMode, holidayName, isWeekendMode, isFreeDayMode, timer, ended }) {
     if (ended) {
-        document.title = 'Työpäivä on jo päättynyt – vapaa on alkanut!';
+        document.title = 'Työpäivä on jo päättynyt!';
         return;
     }
     if (isVacationMode) {
